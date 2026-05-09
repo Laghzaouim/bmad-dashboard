@@ -18,7 +18,7 @@ const STATUS_STYLE = {
   cancelled: 'bg-gray-900 border-gray-700 opacity-50',
 };
 
-export default function StoryCard({ story, artifactsDir }) {
+export default function StoryCard({ story, artifactsDir, onClick }) {
   const [copied, setCopied] = useState(false);
 
   const storyPath = `${artifactsDir}/${story.id}.md`;
@@ -32,7 +32,10 @@ export default function StoryCard({ story, artifactsDir }) {
   }
 
   return (
-    <div className={`group relative rounded-md border p-2.5 ${STATUS_STYLE[story.status] || STATUS_STYLE.backlog}`}>
+    <div
+      onClick={onClick}
+      className={`group relative rounded-md border p-2.5 cursor-pointer ${STATUS_STYLE[story.status] || STATUS_STYLE.backlog}`}
+    >
       <div className="flex items-start justify-between gap-1.5">
         <div className="min-w-0">
           <p className="text-[10px] text-gray-600 leading-none mb-1">{story.id}</p>

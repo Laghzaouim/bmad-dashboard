@@ -2,12 +2,14 @@ import { useState, useEffect, useCallback, useRef } from 'react';
 import Sidebar from './components/Sidebar.jsx';
 import KanbanBoard from './components/KanbanBoard.jsx';
 import StoryPanel from './components/StoryPanel.jsx';
+import StoryDetail from './components/StoryDetail.jsx';
 import { useSSE } from './hooks/useSSE.js';
 
 export default function App() {
   const [projects, setProjects] = useState([]);
   const [selectedProject, setSelectedProject] = useState(null);
   const [selectedEpic, setSelectedEpic] = useState(null);
+  const [selectedStory, setSelectedStory] = useState(null);
   const [loading, setLoading] = useState(true);
   const initialized = useRef(false);
 
@@ -65,7 +67,17 @@ export default function App() {
         <StoryPanel
           epic={selectedEpic}
           project={project}
-          onClose={() => setSelectedEpic(null)}
+          onClose={() => { setSelectedEpic(null); setSelectedStory(null); }}
+          onStoryClick={story => setSelectedStory({ story, project })}
+          storyOpen={!!selectedStory}
+        />
+      )}
+
+      {selectedStory && (
+        <StoryDetail
+          story={selectedStory.story}
+          project={selectedStory.project}
+          onClose={() => setSelectedStory(null)}
         />
       )}
     </div>

@@ -25,14 +25,15 @@ function CloseIcon() {
   );
 }
 
-export default function StoryPanel({ epic, project, onClose }) {
+export default function StoryPanel({ epic, project, onClose, onStoryClick, storyOpen }) {
   useEffect(() => {
+    if (storyOpen) return; // let StoryDetail handle Escape when it's open
     function onKey(e) {
       if (e.key === 'Escape') onClose();
     }
     document.addEventListener('keydown', onKey);
     return () => document.removeEventListener('keydown', onKey);
-  }, [onClose]);
+  }, [onClose, storyOpen]);
 
   const columns = STORY_COLUMNS.map(col => ({
     ...col,
@@ -94,6 +95,7 @@ export default function StoryPanel({ epic, project, onClose }) {
                         key={story.id}
                         story={story}
                         artifactsDir={project.artifactsDir}
+                        onClick={() => onStoryClick && onStoryClick(story)}
                       />
                     ))}
                     {col.stories.length === 0 && (

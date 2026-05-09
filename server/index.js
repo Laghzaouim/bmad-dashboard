@@ -2,9 +2,12 @@ import Fastify from 'fastify';
 import fastifyStatic from '@fastify/static';
 import { fileURLToPath } from 'url';
 import path from 'path';
-import { existsSync } from 'fs';
+import { existsSync, readFileSync } from 'fs';
 import { scanProjects } from './scanner.js';
 import { createWatcher } from './watcher.js';
+
+const CODE_PATH = process.env.CODE_PATH || '/Users/mo/code';
+const HOST_CODE_PATH = process.env.HOST_CODE_PATH || CODE_PATH;
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const PORT = parseInt(process.env.PORT || '3737', 10);
@@ -64,6 +67,24 @@ fastify.get('/api/events', (req, reply) => {
   }, 25000);
 
   req.raw.on('close', () => { clients.delete(raw); clearInterval(heartbeat); });
+});
+
+fastify.get('/api/story', async (req, reply) => {
+  const storyPath = req.query.path;
+  if (!storyPath || !storyPath.endsWith('.md')) {
+    return reply.code(400).send({ error: 'Invalid path' });
+  }
+  const internalPath = storyPath.replace(HOST_CODE_PATH, CODE_PATH);
+  const resolved = path.resolve(internalPath);
+  if (!resolved.startsWith(path.resolve(CODE_PATH))) {
+    return reply.code(403).send({ error: 'Forbidden' });
+  }
+  try {
+    const content = readFileSync(resolved, 'utf8');
+    return { content };
+  } catch {
+    return reply.code(404).send({ error: 'Story file not found — story may still be in backlog' });
+  }
 });
 
 fastify.setNotFoundHandler((req, reply) => {

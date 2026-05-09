@@ -12,9 +12,14 @@
     "@fastify/static": "^7.0.4",
     "chokidar": "^3.6.0",
     "fastify": "^4.28.1",
-    "js-yaml": "^4.1.0"
+    "highlight.js": "^11.11.1",
+    "js-yaml": "^4.1.0",
+    "react-markdown": "^10.1.0",
+    "rehype-highlight": "^7.0.2",
+    "remark-gfm": "^4.0.1"
   },
   "devDependencies": {
+    "@tailwindcss/typography": "^0.5.19",
     "@vitejs/plugin-react": "^4.3.1",
     "autoprefixer": "^10.4.20",
     "postcss": "^8.4.47",
