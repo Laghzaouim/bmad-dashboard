@@ -1,0 +1,12 @@
+services:
+  bmad-dashboard:
+    build: .
+    ports:
+      - "3737:3737"
+    volumes:
+      - /Users/mo/code:/code:ro
+    restart: unless-stopped
+    environment:
+      - CODE_PATH=/code
+      - HOST_CODE_PATH=/Users/mo/code
+      - PORT=3737
